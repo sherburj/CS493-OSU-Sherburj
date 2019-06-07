@@ -1,0 +1,32 @@
+version: "3.5"
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+      - ./db-init/:/docker-entrypoint-initdb.d
+    environment:
+      MONGO_USER: Default
+      MONGO_PASSWORD: newpass
+      MONGO_INITDB_DATABASE: db-init.js
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  api:
+    build: .
+    image: yelp-like-api
+    ports:
+      - "8000:8000" 
+    depends_on:
+      - mongo
+    environment:
+      MONGO_DB_NAME: assignment2sherburj_mongo_1
+      MONGO_USER: root
+      MONGO_PASSWORD: passowrd
+      MONGO_HOST: localhost
+      MONGO_PORT: 12451
+    
+volumes:
+  mongo-data:
+    name: mongo-data-volume
